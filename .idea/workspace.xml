@@ -5,50 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bd92472-9397-4002-b935-e1512148725c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/HealthyCareApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/BookReaderApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/AppointmentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/DoctorController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/PatientController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/Appointment.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/BaseEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/Doctor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/Gender.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/Patient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/Status.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/repository/AppointmentRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/repository/DoctorRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/repository/PatientRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/AppointmentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/DoctorService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/PatientService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/HealthyCareApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/controller/AppointmentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/controller/DoctorController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/controller/PatientController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/Appointment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/BaseEntity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/Doctor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/Gender.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/Patient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/Status.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/repository/AppointmentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/repository/DoctorRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/repository/PatientRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/AppointmentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/DoctorService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/PatientService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/User.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.zurich.demo.HealthyCareApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.zurich.demo.HealthyCareApplicationTests.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.zurich.demo.HealthyCareApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.zurich.demo.HealthyCareApplicationTests.txt" afterDir="false" />
     </list>
@@ -177,7 +137,7 @@
       <option name="presentableId" value="Default" />
       <updated>1752061824516</updated>
       <workItem from="1752061825880" duration="5794000" />
-      <workItem from="1752086055737" duration="4966000" />
+      <workItem from="1752086055737" duration="5298000" />
     </task>
     <servers />
   </component>

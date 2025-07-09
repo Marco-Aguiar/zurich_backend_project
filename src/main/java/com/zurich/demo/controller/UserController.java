@@ -2,6 +2,7 @@ package com.zurich.demo.controller;
 
 import com.zurich.demo.model.User;
 import com.zurich.demo.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         User created = service.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
