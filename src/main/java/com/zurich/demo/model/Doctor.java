@@ -9,9 +9,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "doctors")
-@Getter
-@Setter
 @ToString
+@Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

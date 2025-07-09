@@ -1,4 +1,3 @@
-// src/main/java/com/zurich/healthycare/service/DoctorService.java
 package com.zurich.demo.service;
 
 import com.zurich.demo.exception.ResourceNotFoundException;
