@@ -1,5 +1,6 @@
 package com.zurich.demo.controller;
 
+import com.zurich.demo.dto.UserRegistrationRequest;
 import com.zurich.demo.dto.UserResponseDTO;
 import com.zurich.demo.model.User;
 import com.zurich.demo.service.UserService;
@@ -41,9 +42,15 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid user details supplied", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@Parameter(description = "User details for creation") @Valid @RequestBody User user) {
-        logger.info("Attempting to create a new user with username: {}", user.getUsername());
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<UserResponseDTO> registerUser(@Parameter(description = "User details for registration") @Valid @RequestBody UserRegistrationRequest request) { // <-- CHANGE IS HERE
+        logger.info("Attempting to register a new user with username: {}", request.getUsername());
+
+        User userToCreate = new User();
+        userToCreate.setUsername(request.getUsername());
+        userToCreate.setEmail(request.getEmail());
+        userToCreate.setPassword(request.getPassword());
+
+        User createdUser = userService.createUser(userToCreate);
 
         UserResponseDTO responseDto = new UserResponseDTO(
                 createdUser.getId(),
@@ -51,7 +58,7 @@ public class UserController {
                 createdUser.getEmail()
         );
 
-        logger.info("User created successfully with ID: {}", createdUser.getId());
+        logger.info("User registered successfully with ID: {}", createdUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 

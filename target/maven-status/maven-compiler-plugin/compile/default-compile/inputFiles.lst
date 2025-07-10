@@ -16,6 +16,7 @@
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/SaleInfo.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/SaveBookRequest.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/UpdateStatusRequest.java
+/Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/UserRegistrationRequest.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/UserResponseDTO.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/Volume.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/VolumeInfo.java

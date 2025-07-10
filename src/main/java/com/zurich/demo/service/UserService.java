@@ -1,5 +1,6 @@
 package com.zurich.demo.service;
 
+import com.zurich.demo.dto.UserRegistrationRequest;
 import com.zurich.demo.model.User;
 import com.zurich.demo.repository.UserRepository;
 import org.slf4j.Logger;
