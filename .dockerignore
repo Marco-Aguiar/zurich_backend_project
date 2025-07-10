@@ -1,0 +1,20 @@
+# Ignore all .git related files
+.git
+.gitignore
+
+# Ignore build artifacts
+target/
+build/
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml
+
+# Ignore Docker Compose configuration if not needed inside the image
+docker-compose.yml
+Dockerfile
+
+# Other ignored files
+*.log
+.DS_Store

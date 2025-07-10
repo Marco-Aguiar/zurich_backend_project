@@ -42,19 +42,18 @@ BookFlow is a robust Spring Boot RESTful API designed to help users manage their
 * **SLF4J & Logback:** For logging.
 * **RestTemplate:** For consuming external REST APIs (Google Books API).
 * **Maven:** Dependency management and build automation.
+* **Docker & Docker Compose:** For containerization, consistent environments, and simplified local setup.
 
 ---
 
-### ⚙️ Setup and Run Locally
+### ⚙️ Setup and Run Locally (using Docker Compose)
 
-To get BookFlow up and running on your local machine, follow these steps:
+To get BookFlow up and running on your local machine using Docker Compose, follow these steps:
 
 **Prerequisites:**
 
-* Java 17 or higher
-* Maven 3.x
-* PostgreSQL
-* A Google Books API Key
+* **Docker Desktop** (includes Docker Engine and Docker Compose) installed and running.
+* Git
 
 1.  **Clone the repository**
 
@@ -63,41 +62,43 @@ To get BookFlow up and running on your local machine, follow these steps:
     cd BookFlow
     ```
 
-2.  **Configure Environment Variables / `application.properties`**
+2.  **Configure Environment Variables in `docker-compose.yml`**
 
-    Create an `src/main/resources/application.properties` file (or `application-dev.properties` if you use profiles) and add the following configurations. **Replace placeholders** with your actual database credentials and Google API Key.
+    Open the `docker-compose.yml` file in the root of the project. Under the `app` service's `environment` section and the `db` service's `environment` section, **replace the placeholder values** for database credentials, Google Books API Key, and JWT Secret with your actual values.
 
-    ```properties
-    # Database Configuration (PostgreSQL)
-    spring.datasource.url=jdbc:postgresql://localhost:5432/bookflow_db
-    spring.datasource.username=your_db_user
-    spring.datasource.password=your_db_password
-    spring.jpa.hibernate.ddl-auto=update # Or 'create', 'create-drop' for fresh starts
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-    spring.jpa.show-sql=true
-    spring.jpa.properties.hibernate.format_sql=true
-
-    # Google Books API Configuration
-    google.books.api.key=YOUR_GOOGLE_BOOKS_API_KEY
-    google.books.api.baseUrl=[https://www.googleapis.com/books/v1/volumes](https://www.googleapis.com/books/v1/volumes)
-
-    # JWT Security Configuration
-    api.security.token.secret=YOUR_ULTRA_SECRET_JWT_KEY # Use a strong, random key
+    Example snippet from `docker-compose.yml`:
+    ```yaml
+    services:
+      db:
+        # ...
+        environment:
+          POSTGRES_DB: booktracker_db
+          POSTGRES_USER: your_db_user_for_docker # <--- REPLACE THIS
+          POSTGRES_PASSWORD: your_db_password_for_docker # <--- REPLACE THIS
+      app:
+        # ...
+        environment:
+          DB_HOST: db
+          DB_NAME: booktracker_db
+          DB_USERNAME: your_db_user_for_docker # <--- REPLACE THIS
+          DB_PASSWORD: your_db_password_for_docker # <--- REPLACE THIS
+          GOOGLE_BOOKS_API_KEY: YOUR_GOOGLE_BOOKS_API_KEY_HERE # <--- REPLACE THIS
+          JWT_SECRET: YOUR_ULTRA_SECRET_JWT_KEY_HERE # <--- REPLACE THIS
     ```
 
-3.  **Build the project**
+    > **Note:** Your `src/main/resources/application.properties` is already configured to read these environment variables, making it flexible for Dockerized and non-Dockerized runs.
+
+3.  **Build and Run the Containers**
+
+    From the project root directory, run the following command to build your application's Docker image and start both the application and database containers:
 
     ```bash
-    mvn clean install
+    docker-compose up -d --build
     ```
+    * `--build`: Ensures your application image is rebuilt if changes were made since the last build.
+    * `-d`: Runs the containers in detached mode (in the background).
 
-4.  **Run the application**
-
-    ```bash
-    mvn spring-boot:run
-    ```
-
-    The application will start on `http://localhost:8080` by default.
+    Wait a few moments for the containers to fully start. You can check their status with `docker-compose ps` or view application logs with `docker-compose logs -f app`.
 
 ---
 
@@ -109,12 +110,20 @@ Once the application is running, you can access the Swagger UI for interactive A
 
 ---
 
-### 🤝 Contributing
+### 🛑 Stopping and Cleaning Up
+
+To stop the running containers (and keep the database data):
+
+```bash
+docker-compose down
+```
+
+To stop and remove containers and delete the persistent database data (for a clean start):
+
+```bash
+docker-compose down -v
+```
+
+🤝 Contributing
 
 Contributions are welcome! If you have any suggestions, bug reports, or want to contribute to the codebase, please feel free to open an issue or submit a pull request.
-
----
-
-### 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
