@@ -1,3 +1,4 @@
+// src/main/java/com/zurich/demo/controller/AuthenticationController.java
 package com.zurich.demo.controller;
 
 import com.zurich.demo.dto.LoginRequestDTO;
@@ -37,7 +38,7 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @Operation(summary = "Authenticate a user",
-            description = "Receives user credentials (username and password) and returns a JWT if authentication is successful.")
+            description = "Receives user credentials (email and password) and returns a JWT if authentication is successful.") // Updated description
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Authentication successful",
                     content = @Content(mediaType = "application/json",
@@ -47,22 +48,22 @@ public class AuthenticationController {
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO data) {
-        logger.info("Authentication attempt for user: {}", data.username());
+        logger.info("Authentication attempt for user email: {}", data.email()); // Log email
 
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
             var authenticatedUser = (User) auth.getPrincipal();
             var token = tokenService.generateToken(authenticatedUser);
 
-            logger.info("User '{}' authenticated successfully. JWT generated.", authenticatedUser.getUsername());
+            logger.info("User with email '{}' authenticated successfully. JWT generated.", authenticatedUser.getEmail()); // Log email
             return ResponseEntity.ok(new LoginResponseDTO(token));
 
         } catch (AuthenticationException e) {
-            logger.warn("Authentication failed for user '{}': {}", data.username(), e.getMessage());
+            logger.warn("Authentication failed for email '{}': {}", data.email(), e.getMessage()); // Log email
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (Exception e) {
-            logger.error("An unexpected error occurred during login for user '{}'", data.username(), e);
+            logger.error("An unexpected error occurred during login for email '{}'", data.email(), e); // Log email
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

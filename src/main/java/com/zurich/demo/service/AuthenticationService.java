@@ -19,12 +19,13 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Attempting to load user by username: {}", username);
-        return userRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // Renamed parameter for clarity
+        logger.info("Attempting to load user by email: {}", email);
+
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    logger.warn("User not found with username: {}", username);
-                    return new UsernameNotFoundException("User '" + username + "' not found.");
+                    logger.warn("User not found with email: {}", email);
+                    return new UsernameNotFoundException("User with email '" + email + "' not found.");
                 });
     }
 }

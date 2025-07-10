@@ -1,4 +1,4 @@
-# BookFlow: Your Personal Book Management API
+# Book Reader: Your Personal Book Management API
 
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
@@ -62,28 +62,39 @@ To get BookFlow up and running on your local machine using Docker Compose, follo
     cd BookFlow
     ```
 
-2.  **Configure Environment Variables in `docker-compose.yml`**
+2.  **Configure Environment Variables**
 
-    Open the `docker-compose.yml` file in the root of the project. Under the `app` service's `environment` section and the `db` service's `environment` section, **replace the placeholder values** for database credentials, Google Books API Key, and JWT Secret with your actual values.
+    Create a file named `.env` in the root of your project (the same directory as `docker-compose.yml`) and add your sensitive environment variables there. This keeps your secrets out of `docker-compose.yml`.
 
-    Example snippet from `docker-compose.yml`:
+    ```dotenv
+    # .env file example
+    DB_USERNAME=your_db_user_for_docker
+    DB_PASSWORD=your_db_password_for_docker
+    GOOGLE_BOOKS_API_KEY=YOUR_GOOGLE_BOOKS_API_KEY_HERE
+    JWT_SECRET=YOUR_ULTRA_SECRET_JWT_KEY_HERE
+    ```
+
+    Then, modify your `docker-compose.yml` to *read* these variables from the `.env` file using `${VAR_NAME}`.
+    (If you've already set them directly in `docker-compose.yml`, you can replace the hardcoded values with `${VAR_NAME}`).
+
+    Example snippet from `docker-compose.yml` (showing how it would reference the .env file):
     ```yaml
     services:
       db:
         # ...
         environment:
           POSTGRES_DB: booktracker_db
-          POSTGRES_USER: your_db_user_for_docker # <--- REPLACE THIS
-          POSTGRES_PASSWORD: your_db_password_for_docker # <--- REPLACE THIS
+          POSTGRES_USER: ${DB_USERNAME} # Read from .env
+          POSTGRES_PASSWORD: ${DB_PASSWORD} # Read from .env
       app:
         # ...
         environment:
           DB_HOST: db
           DB_NAME: booktracker_db
-          DB_USERNAME: your_db_user_for_docker # <--- REPLACE THIS
-          DB_PASSWORD: your_db_password_for_docker # <--- REPLACE THIS
-          GOOGLE_BOOKS_API_KEY: YOUR_GOOGLE_BOOKS_API_KEY_HERE # <--- REPLACE THIS
-          JWT_SECRET: YOUR_ULTRA_SECRET_JWT_KEY_HERE # <--- REPLACE THIS
+          DB_USERNAME: ${DB_USERNAME} # Read from .env
+          DB_PASSWORD: ${DB_PASSWORD} # Read from .env
+          GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY} # Read from .env
+          JWT_SECRET: ${JWT_SECRET} # Read from .env
     ```
 
     > **Note:** Your `src/main/resources/application.properties` is already configured to read these environment variables, making it flexible for Dockerized and non-Dockerized runs.
@@ -102,9 +113,50 @@ To get BookFlow up and running on your local machine using Docker Compose, follo
 
 ---
 
+### 🚀 API Usage Examples
+
+Once the application is running, you can interact with the API:
+
+1.  **Register a New User:**
+
+    ```bash
+    curl -X POST \
+      http://localhost:8080/api/users \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "StrongPassword123"
+      }'
+    ```
+
+2.  **Login to Get a JWT:**
+
+    ```bash
+    curl -X POST \
+      http://localhost:8080/api/auth/login \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "email": "test@example.com",
+        "password": "StrongPassword123"
+      }'
+    ```
+    *(Save the `token` from the response for authenticated requests)*
+
+3.  **Search for Books (Authenticated):**
+
+    ```bash
+    curl -X GET \
+      "http://localhost:8080/api/external/books/search?title=The%20Hobbit" \
+      -H 'Authorization: Bearer YOUR_JWT_TOKEN_HERE' \
+      -H 'Content-Type: application/json'
+    ```
+
+---
+
 ### 📄 API Documentation (Swagger UI)
 
-Once the application is running, you can access the Swagger UI for interactive API documentation and testing at:
+For a comprehensive and interactive exploration of all API endpoints, access the Swagger UI at:
 
 `http://localhost:8080/swagger-ui.html`
 

@@ -5,9 +5,9 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_DB: booktracker_db # Matches your application.properties DB_NAME
-      POSTGRES_USER: booktracker_user # <--- UPDATED from screenshot
-      POSTGRES_PASSWORD: booktracker123 # <--- UPDATED from screenshot
+      POSTGRES_DB: booktracker_db
+      POSTGRES_USER: ${DB_USERNAME} # <-- Read from .env
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # <-- Read from .env
     ports:
       - "5432:5432"
     volumes:
@@ -18,12 +18,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: db # The hostname for the DB service within the Docker network
-      DB_NAME: booktracker_db # Matches your application.properties DB_NAME
-      DB_USERNAME: booktracker_user # <--- UPDATED from screenshot
-      DB_PASSWORD: booktracker123 # <--- UPDATED from screenshot
-      GOOGLE_BOOKS_API_KEY: AlzasyCpygX7IGYQyIdohdHnceU8UOkRlyPL_M4 # <--- UPDATED from screenshot
-      JWT_SECRET: Ejuji01e2SQBHliW3VB4ZTkDNiKZ8nAzRsXxGynlY # <--- UPDATED from screenshot
+      DB_HOST: db
+      DB_NAME: booktracker_db
+      DB_USERNAME: ${DB_USERNAME} # <-- Read from .env
+      DB_PASSWORD: ${DB_PASSWORD} # <-- Read from .env
+      GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY} # <-- Read from .env
+      JWT_SECRET: ${JWT_SECRET} # <-- Read from .env
     depends_on:
       - db
     restart: on-failure

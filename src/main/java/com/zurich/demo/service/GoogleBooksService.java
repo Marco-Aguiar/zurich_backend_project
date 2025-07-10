@@ -1,17 +1,19 @@
 package com.zurich.demo.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zurich.demo.dto.BookApiResponse;
 import com.zurich.demo.dto.GoogleBookDTO;
 import com.zurich.demo.dto.SaleInfo;
 import com.zurich.demo.dto.Volume;
 import com.zurich.demo.dto.VolumeInfo;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +27,7 @@ public class GoogleBooksService {
     private final RestTemplate restTemplate;
     private final String apiKey;
     private final String baseUrl;
+    private final ObjectMapper objectMapper;
 
     public GoogleBooksService(RestTemplate restTemplate,
                               @Value("${google.books.api.key}") String apiKey,
@@ -32,26 +35,40 @@ public class GoogleBooksService {
         this.restTemplate = restTemplate;
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         if (this.apiKey == null || this.apiKey.isBlank() || apiKey.startsWith("YOUR_KEY")) {
-            throw new IllegalStateException("The 'google.books.api.key' property is not defined. Please check your application.properties and environment variables.");
+            throw new IllegalStateException("The 'google.books.api.key' property is not defined.");
         }
     }
 
+    @PostConstruct
+    public void logApiKeyPrefix() {
+        logger.info("GOOGLE_BOOKS_API_KEY received by Spring: '{}'", apiKey != null ? apiKey.substring(0, 10) + "..." : "null");
+    }
+
     public List<GoogleBookDTO> searchBooks(String title, String author, String subject) {
-        List<String> queryParts = new ArrayList<>();
-        if (title != null && !title.isBlank()) queryParts.add("intitle:" + title);
-        if (author != null && !author.isBlank()) queryParts.add("inauthor:" + author);
-        if (subject != null && !subject.isBlank()) queryParts.add("subject:" + subject);
+        StringBuilder queryBuilder = new StringBuilder();
 
-        if (queryParts.isEmpty()) {
-            throw new IllegalArgumentException("At least one search criterion must be provided.");
+        if (title != null && !title.isBlank()) {
+            queryBuilder.append(title).append(" ");
         }
-        String query = String.join("+", queryParts);
+        if (author != null && !author.isBlank()) {
+            queryBuilder.append("inauthor:").append(author).append(" ");
+        }
+        if (subject != null && !subject.isBlank()) {
+            queryBuilder.append("subject:").append(subject);
+        }
 
-        BookApiResponse response = executeQuery(query, 20);
+        String query = queryBuilder.toString().trim().replace(" ", "+");
+
+        logger.info("Executing Google Books API call with query: '{}'", query);
+
+        BookApiResponse response = executeQuery(query, 20, "US");
 
         if (response == null || response.items() == null) {
+            logger.warn("No items found or null response received for query: '{}'", query);
             return Collections.emptyList();
         }
 
@@ -60,9 +77,14 @@ public class GoogleBooksService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<SaleInfo> findBookPriceByIsbn(String isbn) {
+    public Optional<SaleInfo> findBookPriceByIsbn(String isbn, String country) {
         String query = "isbn:" + isbn;
-        BookApiResponse response = executeQuery(query, 1);
+        BookApiResponse response = executeQuery(query, 1, country);
+
+        if (response == null || response.items() == null) {
+            logger.warn("No sale info found or null response received for ISBN: '{}'", isbn);
+            return Optional.empty();
+        }
 
         return Optional.ofNullable(response)
                 .flatMap(res -> Optional.ofNullable(res.items()))
@@ -71,8 +93,8 @@ public class GoogleBooksService {
     }
 
     public List<GoogleBookDTO> findRecommendationsByTitle(String title) {
-        String query = "intitle:\"" + title + "\"";
-        BookApiResponse initialResponse = executeQuery(query, 1);
+        String query = "intitle:" + title;
+        BookApiResponse initialResponse = executeQuery(query, 1, "US");
 
         Optional<String> categoryOpt = Optional.ofNullable(initialResponse)
                 .flatMap(res -> Optional.ofNullable(res.items()))
@@ -81,13 +103,15 @@ public class GoogleBooksService {
                 .flatMap(categories -> categories.stream().findFirst());
 
         if (categoryOpt.isEmpty()) {
+            logger.warn("No category found for title '{}' to base recommendations on.", title);
             return Collections.emptyList();
         }
 
-        String recommendationQuery = "subject:\"" + categoryOpt.get() + "\"";
-        BookApiResponse recommendationResponse = executeQuery(recommendationQuery, 10);
+        String recommendationQuery = "subject:" + categoryOpt.get();
+        BookApiResponse recommendationResponse = executeQuery(recommendationQuery, 10, "US");
 
         if (recommendationResponse == null || recommendationResponse.items() == null) {
+            logger.warn("No recommendations found or null response received for category: '{}'", categoryOpt.get());
             return Collections.emptyList();
         }
 
@@ -97,20 +121,32 @@ public class GoogleBooksService {
                 .collect(Collectors.toList());
     }
 
-    private BookApiResponse executeQuery(String query, int maxResults) {
+    private BookApiResponse executeQuery(String query, int maxResults, String country) {
         String uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .queryParam("q", query)
+                .queryParam("country", country)
                 .queryParam("maxResults", maxResults)
                 .queryParam("printType", "books")
                 .queryParam("key", apiKey)
                 .encode()
                 .toUriString();
 
-        logger.info("Executing Google Books API call. Query: '{}'", query);
+        logger.info("Executing Google Books API call. Full URI: '{}'", uri);
+        String rawJsonResponse = null;
+
         try {
-            return restTemplate.getForObject(uri, BookApiResponse.class);
+            rawJsonResponse = restTemplate.getForObject(uri, String.class);
+            logger.info("Raw JSON response received for query '{}': {}", query, rawJsonResponse.substring(0, Math.min(rawJsonResponse.length(), 1000)));
+
+            BookApiResponse response = objectMapper.readValue(rawJsonResponse, BookApiResponse.class);
+
+            logger.info("Google Books API call successful for query: '{}'. Total items reported by API: {}. Items list size: {}",
+                    query, response.totalItems(), (response.items() != null ? response.items().size() : 0));
+            return response;
+
         } catch (Exception e) {
-            logger.error("Error calling Google Books API for query: '{}'", query, e);
+            logger.error("Error calling/deserializing Google Books API for query: '{}'. Raw response (if available): {}. Exception type: {}. Message: {}",
+                    query, (rawJsonResponse != null ? rawJsonResponse.substring(0, Math.min(rawJsonResponse.length(), 500)) : "N/A"), e.getClass().getName(), e.getMessage(), e);
             return null;
         }
     }

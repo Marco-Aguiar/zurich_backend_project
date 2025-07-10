@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +52,11 @@ public class GoogleBooksController {
             @ApiResponse(responseCode = "404", description = "No sale information found for the given ISBN", content = @Content)
     })
     @GetMapping("/price")
-    public ResponseEntity<SaleInfo> getBookPriceByIsbn(@Parameter(description = "The 13-digit ISBN of the book", example = "9788532530837") @RequestParam String isbn) {
-        logger.info("Searching for price information for ISBN: {}", isbn);
-        Optional<SaleInfo> saleInfoOpt = googleBooksService.findBookPriceByIsbn(isbn);
+    public ResponseEntity<SaleInfo> getBookPriceByIsbn(
+            @Parameter(description = "The 13-digit ISBN of the book", example = "9788532530837") @RequestParam String isbn,
+            @RequestParam(defaultValue = "US") String country) {
+        logger.info("Searching for price information for ISBN: {} in country: {}", isbn, country);
+        Optional<SaleInfo> saleInfoOpt = googleBooksService.findBookPriceByIsbn(isbn, country);
 
         saleInfoOpt.ifPresent(saleInfo -> logger.info("Price found for ISBN {}: {}", isbn, saleInfo.retailPrice()));
 
