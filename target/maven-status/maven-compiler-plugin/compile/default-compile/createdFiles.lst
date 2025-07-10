@@ -22,11 +22,11 @@ com/zurich/demo/dto/UserResponseDTO.class
 com/zurich/demo/dto/LoginRequestDTO.class
 com/zurich/demo/config/SecurityFilter.class
 com/zurich/demo/model/BookStatus.class
-com/zurich/demo/controller/BookController.class
 com/zurich/demo/exception/ResourceNotFoundException.class
 com/zurich/demo/controller/UserController.class
 com/zurich/demo/dto/GoogleBookDTO.class
 com/zurich/demo/config/AppConfig.class
+com/zurich/demo/controller/BookEntryController.class
 com/zurich/demo/controller/AuthenticationController.class
 com/zurich/demo/model/BookEntry.class
 com/zurich/demo/BookReaderApplication.class

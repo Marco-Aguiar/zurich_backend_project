@@ -1,20 +1,25 @@
 package com.zurich.demo.service;
 
-import com.zurich.demo.dto.*;
+import com.zurich.demo.dto.BookApiResponse;
+import com.zurich.demo.dto.GoogleBookDTO;
+import com.zurich.demo.dto.SaleInfo;
+import com.zurich.demo.dto.Volume;
+import com.zurich.demo.dto.VolumeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GoogleBooksService {
 
-    // ✅ MELHORIA: Usando um logger profissional em vez de System.out
     private static final Logger logger = LoggerFactory.getLogger(GoogleBooksService.class);
 
     private final RestTemplate restTemplate;
@@ -28,23 +33,19 @@ public class GoogleBooksService {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
 
-        if (this.apiKey == null || this.apiKey.isBlank() || apiKey.startsWith("SUA_CHAVE")) {
-            throw new IllegalStateException("A propriedade 'google.books.api.key' não está definida. Verifique seu application.properties e as variáveis de ambiente.");
+        if (this.apiKey == null || this.apiKey.isBlank() || apiKey.startsWith("YOUR_KEY")) {
+            throw new IllegalStateException("The 'google.books.api.key' property is not defined. Please check your application.properties and environment variables.");
         }
     }
 
-    /**
-     * Busca flexível de livros.
-     */
     public List<GoogleBookDTO> searchBooks(String title, String author, String subject) {
-        // ✅ MELHORIA: Montagem de query um pouco mais limpa
         List<String> queryParts = new ArrayList<>();
         if (title != null && !title.isBlank()) queryParts.add("intitle:" + title);
         if (author != null && !author.isBlank()) queryParts.add("inauthor:" + author);
         if (subject != null && !subject.isBlank()) queryParts.add("subject:" + subject);
 
         if (queryParts.isEmpty()) {
-            throw new IllegalArgumentException("Pelo menos um critério de busca deve ser fornecido.");
+            throw new IllegalArgumentException("At least one search criterion must be provided.");
         }
         String query = String.join("+", queryParts);
 
@@ -59,28 +60,20 @@ public class GoogleBooksService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Busca o preço de um livro pelo ISBN.
-     */
     public Optional<SaleInfo> findBookPriceByIsbn(String isbn) {
         String query = "isbn:" + isbn;
         BookApiResponse response = executeQuery(query, 1);
 
-        // ✅ CORREÇÃO: Lógica segura que evita NullPointerException se "items" for nulo.
         return Optional.ofNullable(response)
-                .flatMap(res -> Optional.ofNullable(res.items())) // Lida com 'items' nulo
-                .flatMap(items -> items.stream().findFirst())     // Pega o primeiro item da lista
-                .map(Volume::saleInfo);                           // Pega as informações de venda
+                .flatMap(res -> Optional.ofNullable(res.items()))
+                .flatMap(items -> items.stream().findFirst())
+                .map(Volume::saleInfo);
     }
 
-    /**
-     * Busca recomendações com base no título de um livro.
-     */
     public List<GoogleBookDTO> findRecommendationsByTitle(String title) {
         String query = "intitle:\"" + title + "\"";
         BookApiResponse initialResponse = executeQuery(query, 1);
 
-        // ✅ CORREÇÃO: Lógica segura para extrair a categoria, evitando NullPointerException.
         Optional<String> categoryOpt = Optional.ofNullable(initialResponse)
                 .flatMap(res -> Optional.ofNullable(res.items()))
                 .flatMap(items -> items.stream().findFirst())
@@ -104,12 +97,6 @@ public class GoogleBooksService {
                 .collect(Collectors.toList());
     }
 
-
-    // --- MÉTODOS PRIVADOS AUXILIARES ---
-
-    /**
-     * Centraliza a chamada à API.
-     */
     private BookApiResponse executeQuery(String query, int maxResults) {
         String uri = UriComponentsBuilder.fromUriString(baseUrl)
                 .queryParam("q", query)
@@ -119,19 +106,15 @@ public class GoogleBooksService {
                 .encode()
                 .toUriString();
 
-        logger.info("Executando chamada para a API do Google Books. Query: '{}'", query);
+        logger.info("Executing Google Books API call. Query: '{}'", query);
         try {
             return restTemplate.getForObject(uri, BookApiResponse.class);
         } catch (Exception e) {
-            // ✅ MELHORIA: Log de erro mais informativo
-            logger.error("Erro ao chamar a API do Google Books para a query: '{}'", query, e);
+            logger.error("Error calling Google Books API for query: '{}'", query, e);
             return null;
         }
     }
 
-    /**
-     * Converte o DTO da API para o DTO do seu sistema.
-     */
     private GoogleBookDTO convertToGoogleBookDTO(Volume volume) {
         VolumeInfo info = volume.volumeInfo();
         GoogleBookDTO dto = new GoogleBookDTO();

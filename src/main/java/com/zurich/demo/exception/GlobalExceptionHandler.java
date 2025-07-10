@@ -1,10 +1,12 @@
 package com.zurich.demo.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException; // ✅ Importe esta classe
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,17 +19,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ✅ NOVO MÉTODO PARA TRATAR ERROS DE LOGIN
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+        logger.warn("Authentication failed: Bad credentials provided. Message: {}", ex.getMessage());
         Map<String, String> body = new HashMap<>();
-        body.put("error", "Usuário ou senha inválidos.");
-        // Retorna 401 Unauthorized, que é o status correto para falha de login
+        body.put("error", "Invalid username or password.");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        logger.warn("Data integrity violation: {}", ex.getLocalizedMessage());
         Map<String, String> body = new HashMap<>();
         body.put("error", "User already exists with the provided email or username.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
@@ -35,6 +39,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        logger.warn("Validation error: {}", ex.getMessage());
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
@@ -44,6 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
+        logger.warn("Illegal argument provided: {}", ex.getMessage());
         Map<String, String> body = new HashMap<>();
         body.put("error", ex.getMessage() != null ? ex.getMessage() : "Invalid request.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
@@ -51,29 +57,23 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException ex) {
+        logger.warn("Entity not found: {}", ex.getMessage());
         Map<String, String> body = new HashMap<>();
         body.put("error", ex.getMessage() != null ? ex.getMessage() : "Resource not found.");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
-    // Supondo que você tenha uma ExternalServiceException personalizada
-    /* @ExceptionHandler(ExternalServiceException.class)
-    public ResponseEntity<Map<String, String>> handleExternalApiError(ExternalServiceException ex) {
-        Map<String, String> body = new HashMap<>();
-        body.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(body);
-    } */
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        logger.warn("Method argument type mismatch for parameter '{}': {}", ex.getName(), ex.getMessage());
         Map<String, String> body = new HashMap<>();
         body.put("error", "Invalid value for parameter: " + ex.getName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    // O tratador genérico continua aqui como última opção
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
+        logger.error("An unexpected internal server error occurred: {}", ex.getMessage(), ex);
         Map<String, String> body = new HashMap<>();
         body.put("error", "An unexpected error occurred.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);

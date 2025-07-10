@@ -22,7 +22,6 @@ public class SecurityConfig {
     @Autowired
     private SecurityFilter securityFilter;
 
-    // ✅ Injetamos nosso novo tratador de erros
     @Autowired
     private CustomAuthenticationErrorHandler customAuthenticationErrorHandler;
 
@@ -32,10 +31,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // ✅ NOVA SEÇÃO: Configuração do tratamento de exceções
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(customAuthenticationErrorHandler) // Para erros 401
-                        .accessDeniedHandler(customAuthenticationErrorHandler)      // Para erros 403
+                        .authenticationEntryPoint(customAuthenticationErrorHandler)
+                        .accessDeniedHandler(customAuthenticationErrorHandler)
                 )
 
                 .authorizeHttpRequests(authorize -> authorize

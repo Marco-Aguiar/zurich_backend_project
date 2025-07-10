@@ -1,9 +1,11 @@
-package com.zurich.demo.exception; // Coloque no mesmo pacote do seu GlobalExceptionHandler
+package com.zurich.demo.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -18,42 +20,39 @@ import java.util.Map;
 @Component
 public class CustomAuthenticationErrorHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationErrorHandler.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    /**
-     * Este método é chamado quando um usuário não autenticado tenta acessar um recurso protegido.
-     * Nós retornamos um erro 401 Unauthorized.
-     */
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
 
+        logger.warn("Unauthorized access attempt. URI: {}, Error: {}", request.getRequestURI(), authException.getMessage());
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Map<String, String> body = new HashMap<>();
-        body.put("error", "Acesso não autorizado.");
-        body.put("message", "Token JWT ausente, inválido ou expirado. Por favor, faça o login novamente.");
+        body.put("error", "Unauthorized Access");
+        body.put("message", "Missing, invalid, or expired JWT token. Please log in again.");
 
         objectMapper.writeValue(response.getWriter(), body);
     }
 
-    /**
-     * Este método é chamado quando um usuário autenticado tenta acessar um recurso
-     * para o qual ele não tem permissão. Nós retornamos um erro 403 Forbidden.
-     */
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
+        logger.warn("Access Denied. URI: {}, Error: {}", request.getRequestURI(), accessDeniedException.getMessage());
+
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Map<String, String> body = new HashMap<>();
-        body.put("error", "Acesso Negado.");
-        body.put("message", "Você não tem permissão para acessar este recurso.");
+        body.put("error", "Access Denied");
+        body.put("message", "You do not have permission to access this resource.");
 
         objectMapper.writeValue(response.getWriter(), body);
     }

@@ -3,7 +3,7 @@
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/config/SecurityConfig.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/config/SecurityFilter.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/controller/AuthenticationController.java
-/Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/controller/BookController.java
+/Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/controller/BookEntryController.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/controller/GoogleBooksController.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/controller/UserController.java
 /Users/marcoaguiar/Documents/GitHub/zurich_backend_project/src/main/java/com/zurich/demo/dto/BookApiResponse.java

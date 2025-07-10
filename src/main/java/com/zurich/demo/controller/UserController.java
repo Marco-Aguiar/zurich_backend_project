@@ -3,73 +3,103 @@ package com.zurich.demo.controller;
 import com.zurich.demo.dto.UserResponseDTO;
 import com.zurich.demo.model.User;
 import com.zurich.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "User Management", description = "Endpoints for managing user accounts.")
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService service;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final UserService userService;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    /**
-     * Cria um novo usuário (endpoint de registro).
-     * O corpo da requisição ainda recebe a entidade User com a senha,
-     * mas a resposta retorna o DTO seguro, sem a senha.
-     */
+    @Operation(summary = "Create a new user (registration endpoint)",
+            description = "Registers a new user account. The request body contains user details including password, but the response returns a secure DTO without the password.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user details supplied", content = @Content)
+    })
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody User user) {
-        User createdUser = service.createUser(user);
+    public ResponseEntity<UserResponseDTO> create(@Parameter(description = "User details for creation") @Valid @RequestBody User user) {
+        logger.info("Attempting to create a new user with username: {}", user.getUsername());
+        User createdUser = userService.createUser(user);
 
-        // ✅ CORREÇÃO: Mapeia o usuário criado para o DTO de resposta segura.
         UserResponseDTO responseDto = new UserResponseDTO(
                 createdUser.getId(),
                 createdUser.getUsername(),
                 createdUser.getEmail()
         );
 
+        logger.info("User created successfully with ID: {}", createdUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    /**
-     * Retorna uma lista de todos os usuários.
-     */
+    @Operation(summary = "Get all users",
+            description = "Retrieves a list of all registered users.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved list of users",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class)))
     @GetMapping
     public List<UserResponseDTO> findAll() {
-        // ✅ CORREÇÃO: Converte a lista de entidades User para uma lista de DTOs seguros.
-        return service.getAllUsers().stream()
+        logger.info("Fetching all users.");
+        return userService.getAllUsers().stream()
                 .map(user -> new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Encontra um usuário pelo seu ID.
-     */
+    @Operation(summary = "Get user by ID",
+            description = "Retrieves a user's details by their unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
-        // ✅ CORREÇÃO: Mapeia o Optional<User> para um Optional<UserResponseDTO> antes de criar a resposta.
-        return service.getUserById(id)
-                .map(user -> new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail()))
+    public ResponseEntity<UserResponseDTO> findById(@Parameter(description = "ID of the user to retrieve", example = "1") @PathVariable Long id) {
+        logger.info("Searching for user with ID: {}", id);
+        return userService.getUserById(id)
+                .map(user -> {
+                    logger.info("User found with ID: {}", id);
+                    return new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail());
+                })
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> {
+                    logger.warn("User not found with ID: {}", id);
+                    return ResponseEntity.notFound().build();
+                });
     }
 
-    /**
-     * Deleta um usuário pelo seu ID.
-     * Este método não precisou de alterações, pois não retorna dados do usuário.
-     */
+    @Operation(summary = "Delete user by ID",
+            description = "Deletes a user account by their unique ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteUser(id);
+    public ResponseEntity<Void> delete(@Parameter(description = "ID of the user to delete", example = "1") @PathVariable Long id) {
+        logger.info("Attempting to delete user with ID: {}", id);
+        userService.deleteUser(id);
+        logger.info("User with ID: {} deleted successfully.", id);
         return ResponseEntity.noContent().build();
     }
 }

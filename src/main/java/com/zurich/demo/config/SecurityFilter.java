@@ -9,11 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
@@ -28,41 +28,37 @@ public class SecurityFilter extends OncePerRequestFilter {
     private UserRepository userRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        logger.info(">>>> SecurityFilter: Iniciando filtro para a requisição: {}", request.getRequestURI());
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        var token = this.recoverToken(request);
+        logger.debug("Security filter is processing request for: {}", request.getRequestURI());
+
+        String token = this.recoverToken(request);
+
         if (token != null) {
-            logger.info(">>>> SecurityFilter: Token JWT encontrado no cabeçalho.");
-            var username = tokenService.validateToken(token);
-            logger.info(">>>> SecurityFilter: Token validado. Subject (username): {}", username);
+            String username = tokenService.validateToken(token);
 
             if (username != null && !username.isEmpty()) {
                 userRepository.findByUsername(username).ifPresent(user -> {
-                    logger.info(">>>> SecurityFilter: Usuário '{}' encontrado no banco.", user.getUsername());
-                    logger.info(">>>> SecurityFilter: Autoridades do usuário: {}", user.getAuthorities());
-
                     var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    logger.info(">>>> SecurityFilter: Usuário autenticado e CONTEXTO DE SEGURANÇA DEFINIDO.");
+                    logger.info("User '{}' successfully authenticated and security context set.", user.getUsername());
                 });
             } else {
-                logger.warn(">>>> SecurityFilter: Token JWT é inválido ou expirado.");
+                logger.warn("JWT validation failed. The token may be invalid or expired.");
             }
-        } else {
-            logger.info(">>>> SecurityFilter: Nenhum token JWT encontrado no cabeçalho Authorization.");
         }
 
         filterChain.doFilter(request, response);
-        logger.info(">>>> SecurityFilter: Finalizando filtro para a requisição: {}", request.getRequestURI());
     }
 
     private String recoverToken(HttpServletRequest request) {
-        var authHeader = request.getHeader("Authorization");
-        if (authHeader == null) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
-        return authHeader.replace("Bearer ", "");
+        return authHeader.substring(7);
     }
 }

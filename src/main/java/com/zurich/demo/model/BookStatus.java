@@ -1,15 +1,17 @@
 package com.zurich.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Represents the status of a book in a user's collection.")
 public enum BookStatus {
-    WISHLIST,        // Ainda quer comprar ou buscar
-    PLAN_TO_READ,    // Pretende começar em breve
-    READING,         // Em andamento
-    PAUSED,          // Parou temporariamente
-    DROPPED,         // Abandonou completamente
-    READ,            // Finalizou
-    RECOMMENDED;     // Recomenda a outros
+    WISHLIST,
+    PLAN_TO_READ,
+    READING,
+    PAUSED,
+    DROPPED,
+    READ,
+    RECOMMENDED;
 
     @JsonCreator
     public static BookStatus fromValue(String value) {

@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit; // ✅ Importe esta classe
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class TokenService {
@@ -26,36 +24,36 @@ public class TokenService {
     public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.create()
+            String token = JWT.create()
                     .withIssuer("book-reader-api")
                     .withSubject(user.getUsername())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
+            logger.info("JWT token generated successfully for user: {}", user.getUsername());
+            return token;
         } catch (JWTCreationException exception) {
-            logger.error("Erro durante a criação do token JWT", exception);
-            throw new RuntimeException("Erro ao gerar o token JWT", exception);
+            logger.error("Error during JWT token creation for user: {}", user.getUsername(), exception);
+            throw new RuntimeException("Error generating JWT token", exception);
         }
     }
 
     public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
+            String subject = JWT.require(algorithm)
                     .withIssuer("book-reader-api")
                     .build()
                     .verify(token)
                     .getSubject();
+            logger.info("JWT token validated successfully for subject: {}", subject);
+            return subject;
         } catch (JWTVerificationException exception) {
-            logger.error("Falha na validação do JWT: {}", exception.getMessage());
+            logger.warn("JWT validation failed: {}", exception.getMessage());
             return "";
         }
     }
 
-    /**
-     * ✅ CORREÇÃO: Esta é a forma mais segura e correta de calcular a expiração.
-     */
     private Instant generateExpirationDate() {
-        // Pega o momento atual exato na linha do tempo UTC e adiciona 2 horas.
         return Instant.now().plus(2, ChronoUnit.HOURS);
     }
 }

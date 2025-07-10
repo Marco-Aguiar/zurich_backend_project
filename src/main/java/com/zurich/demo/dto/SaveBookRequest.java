@@ -9,21 +9,21 @@ import lombok.Data;
 @Data
 public class SaveBookRequest {
 
-    @NotBlank(message = "O ID do livro (googleBookId) é obrigatório.")
+    @NotBlank(message = "The book ID (googleBookId) is required.")
     private String googleBookId;
 
-    @NotBlank(message = "O título é obrigatório.")
+    @NotBlank(message = "The title is required.")
     private String title;
 
-    @NotBlank(message = "O(s) autor(es) é(são) obrigatório(s).")
+    @NotBlank(message = "The author(s) field is required.")
     private String authors;
 
-    @NotBlank(message = "O assunto (subject) é obrigatório.")
+    @NotBlank(message = "The subject is required.")
     private String subject;
 
     private String thumbnailUrl;
 
-    @NotNull(message = "O status do livro é obrigatório.")
+    @NotNull(message = "The book status is required.")
     @Schema(description = "Book status", example = "PLAN_TO_READ")
     private BookStatus status;
 }

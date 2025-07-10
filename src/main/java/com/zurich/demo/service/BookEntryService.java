@@ -6,6 +6,8 @@ import com.zurich.demo.model.BookStatus;
 import com.zurich.demo.model.User;
 import com.zurich.demo.repository.BookEntryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,52 +15,71 @@ import java.util.List;
 @Service
 public class BookEntryService {
 
-    private final BookEntryRepository repository;
+    private static final Logger logger = LoggerFactory.getLogger(BookEntryService.class);
+    private final BookEntryRepository bookEntryRepository;
 
-    public BookEntryService(BookEntryRepository repository) {
-        this.repository = repository;
+    public BookEntryService(BookEntryRepository bookEntryRepository) {
+        this.bookEntryRepository = bookEntryRepository;
     }
 
-    public List<BookEntry> getBooksForUser(Long userId) {
+    public List<BookEntry> getBookEntriesForUser(Long userId) {
         if (userId == null || userId <= 0) {
+            logger.warn("Attempted to get book entries with an invalid user ID: {}", userId);
             throw new IllegalArgumentException("Invalid user ID.");
         }
-
         User user = new User();
         user.setId(userId);
-        return repository.findByUser(user);
+        logger.info("Fetching book entries for user ID: {}", userId);
+        return bookEntryRepository.findByUser(user);
     }
 
-    public BookEntry addBook(BookEntry entry) {
+    public BookEntry addBookEntry(BookEntry entry) {
         if (entry == null || entry.getTitle() == null || entry.getUser() == null) {
+            logger.error("Attempted to add a book entry with missing details.");
             throw new IllegalArgumentException("Missing book details or user.");
         }
-        return repository.save(entry);
+        logger.info("Adding new book entry for user ID: {} with title: {}", entry.getUser().getId(), entry.getTitle());
+        return bookEntryRepository.save(entry);
     }
 
-
     public BookEntry updateOnlyStatus(Long bookId, BookStatus status) {
-        BookEntry book = repository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookId));
-        book.setStatus(status);
-        return repository.save(book);
+        logger.info("Attempting to update status for book entry ID: {} to status: {}", bookId, status);
+        BookEntry bookEntry = bookEntryRepository.findById(bookId)
+                .orElseThrow(() -> {
+                    logger.warn("Book entry not found with ID: {}", bookId);
+                    return new EntityNotFoundException("Book entry not found with id: " + bookId);
+                });
+        bookEntry.setStatus(status);
+        BookEntry updatedEntry = bookEntryRepository.save(bookEntry);
+        logger.info("Successfully updated status for book entry ID: {} to status: {}", bookId, status);
+        return updatedEntry;
     }
 
     public BookEntry updateStatus(Long id, BookEntry newStatus) {
-        BookEntry book = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + id));
-        book.setStatus(newStatus.getStatus());
-        return repository.save(book);
+        logger.info("Attempting to update full status for book entry ID: {}", id);
+        BookEntry bookEntry = bookEntryRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.warn("Book entry not found with ID: {}", id);
+                    return new EntityNotFoundException("Book entry not found with id: " + id);
+                });
+        bookEntry.setStatus(newStatus.getStatus());
+        BookEntry updatedEntry = bookEntryRepository.save(bookEntry);
+        logger.info("Successfully updated status for book entry ID: {}", id);
+        return updatedEntry;
     }
 
-    public void deleteBook(Long id) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Book not found with id: " + id);
+    public void deleteBookEntry(Long id) {
+        logger.info("Attempting to delete book entry with ID: {}", id);
+        if (!bookEntryRepository.existsById(id)) {
+            logger.warn("Book entry not found for deletion with ID: {}", id);
+            throw new EntityNotFoundException("Book entry not found with id: " + id);
         }
-        repository.deleteById(id);
+        bookEntryRepository.deleteById(id);
+        logger.info("Book entry with ID: {} deleted successfully.", id);
     }
 
-    public BookEntry saveBookFromSearch(SaveBookRequest request, Long userId) {
+    public BookEntry saveBookEntryFromSearch(SaveBookRequest request, Long userId) {
+        logger.info("Saving book entry from search for user ID: {} with Google Book ID: {}", userId, request.getGoogleBookId());
         BookEntry entry = new BookEntry();
         entry.setGoogleBookId(request.getGoogleBookId());
         entry.setTitle(request.getTitle());
@@ -71,6 +92,8 @@ public class BookEntryService {
         user.setId(userId);
         entry.setUser(user);
 
-        return repository.save(entry);
+        BookEntry savedEntry = bookEntryRepository.save(entry);
+        logger.info("Book entry saved successfully with ID: {}", savedEntry.getId());
+        return savedEntry;
     }
 }
