@@ -83,7 +83,7 @@ public class BookEntryService {
         BookEntry entry = new BookEntry();
         entry.setGoogleBookId(request.getGoogleBookId());
         entry.setTitle(request.getTitle());
-        entry.setAuthors(request.getAuthors());
+        entry.setAuthors(String.join(", ", request.getAuthors())); // <-- corrigido aqui
         entry.setSubject(request.getSubject());
         entry.setThumbnailUrl(request.getThumbnailUrl());
         entry.setStatus(request.getStatus());

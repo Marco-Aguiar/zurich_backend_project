@@ -3,8 +3,12 @@ package com.zurich.demo.dto;
 import com.zurich.demo.model.BookStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SaveBookRequest {
@@ -15,8 +19,10 @@ public class SaveBookRequest {
     @NotBlank(message = "The title is required.")
     private String title;
 
-    @NotBlank(message = "The author(s) field is required.")
-    private String authors;
+    @NotEmpty(message = "Authors list must not be empty")
+    @Size(min = 1, message = "There must be at least one author")
+    private List<@NotBlank(message = "Author name must not be blank") String> authors;
+
 
     @NotBlank(message = "The subject is required.")
     private String subject;

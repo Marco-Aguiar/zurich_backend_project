@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 
 @Component
@@ -33,21 +34,36 @@ public class SecurityFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        logger.debug("Security filter is processing request for: {}", request.getRequestURI());
+        String path = request.getServletPath();
+        logger.debug("Request to path: {}", path);
+
+        String method = request.getMethod();
+
+        if ("OPTIONS".equalsIgnoreCase(method)
+                || "/api/auth/login".equals(path)
+                || "/api/users".equals(path)
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")) {
+            logger.debug("Skipping filter for public or preflight request: {} {}", method, path);
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String token = this.recoverToken(request);
 
-        if (token != null) {
+        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             String username = tokenService.validateToken(token);
 
             if (username != null && !username.isEmpty()) {
                 userRepository.findByUsername(username).ifPresent(user -> {
-                    var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            user, null, user.getAuthorities()
+                    );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("User '{}' successfully authenticated and security context set.", user.getUsername());
+                    logger.info("User '{}' authenticated successfully.", user.getUsername());
                 });
             } else {
-                logger.warn("JWT validation failed. The token may be invalid or expired.");
+                logger.warn("Invalid or expired token.");
             }
         }
 

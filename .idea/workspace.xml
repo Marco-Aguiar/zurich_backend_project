@@ -5,47 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bd92472-9397-4002-b935-e1512148725c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/AppConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/AuthenticationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/BookApiResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/BookApiResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/LoginRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/LoginRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/AuthenticationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/BookReaderApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/config/SecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/controller/GoogleBooksController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/controller/UserController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/dto/GoogleBookDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/dto/SaveBookRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/dto/UpdateStatusRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/exception/ExternalServiceException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/exception/GlobalExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/exception/ResourceNotFoundException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/exception/ScheduleConflictException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/BookEntry.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/BookStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/model/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/repository/BookEntryRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/repository/UserRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/BookEntryService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/GoogleBooksService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/zurich/demo/service/UserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/SaveBookRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/SaveBookRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/BookEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/BookEntryService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +178,7 @@
       <workItem from="1752109631133" duration="4000" />
       <workItem from="1752109647680" duration="70000" />
       <workItem from="1752109725619" duration="45000" />
-      <workItem from="1752109777344" duration="21761000" />
+      <workItem from="1752109777344" duration="34340000" />
     </task>
     <servers />
   </component>
