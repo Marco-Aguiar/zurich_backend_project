@@ -5,9 +5,9 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_DB: booktracker_db
-      POSTGRES_USER: ${DB_USERNAME} # <-- Read from .env
-      POSTGRES_PASSWORD: ${DB_PASSWORD} # <-- Read from .env
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -19,11 +19,11 @@ services:
       - "8080:8080"
     environment:
       DB_HOST: db
-      DB_NAME: booktracker_db
-      DB_USERNAME: ${DB_USERNAME} # <-- Read from .env
-      DB_PASSWORD: ${DB_PASSWORD} # <-- Read from .env
-      GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY} # <-- Read from .env
-      JWT_SECRET: ${JWT_SECRET} # <-- Read from .env
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - db
     restart: on-failure

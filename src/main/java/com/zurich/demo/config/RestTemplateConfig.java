@@ -11,7 +11,7 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-                .defaultHeader("User-Agent", "BookReaderApp/1.0 (Contact: your_email@example.com)")
+                .defaultHeader("User-Agent", "BookReaderApp/1.0 (Contact: marcoaguiar14@gmail.com)")
                 .build();
     }
 }

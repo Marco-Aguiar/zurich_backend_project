@@ -1,4 +1,4 @@
-package com.zurich.demo.config;
+package com.zurich.demo.security;
 
 import com.zurich.demo.repository.UserRepository;
 import com.zurich.demo.service.TokenService;
