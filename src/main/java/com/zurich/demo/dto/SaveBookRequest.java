@@ -28,6 +28,8 @@ public class SaveBookRequest {
     private String subject;
 
     private String thumbnailUrl;
+    private Double averageRating;
+
 
     @NotNull(message = "The book status is required.")
     @Schema(description = "Book status", example = "PLAN_TO_READ")

@@ -9,5 +9,7 @@ public record VolumeInfo(
         List<String> authors,
         List<String> categories,
         String description,
-        ImageLinks imageLinks
+        ImageLinks imageLinks,
+        Double averageRating,
+        Integer ratingsCount
 ) {}

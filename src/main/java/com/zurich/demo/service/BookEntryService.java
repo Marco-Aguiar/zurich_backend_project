@@ -80,13 +80,16 @@ public class BookEntryService {
 
     public BookEntry saveBookEntryFromSearch(SaveBookRequest request, Long userId) {
         logger.info("Saving book entry from search for user ID: {} with Google Book ID: {}", userId, request.getGoogleBookId());
+        System.out.println(request.getAverageRating());
+        System.out.println("here's the rating");
         BookEntry entry = new BookEntry();
         entry.setGoogleBookId(request.getGoogleBookId());
         entry.setTitle(request.getTitle());
-        entry.setAuthors(String.join(", ", request.getAuthors())); // <-- corrigido aqui
+        entry.setAuthors(String.join(", ", request.getAuthors()));
         entry.setSubject(request.getSubject());
         entry.setThumbnailUrl(request.getThumbnailUrl());
         entry.setStatus(request.getStatus());
+        entry.setAverageRating(request.getAverageRating());
 
         User user = new User();
         user.setId(userId);
@@ -96,4 +99,5 @@ public class BookEntryService {
         logger.info("Book entry saved successfully with ID: {}", savedEntry.getId());
         return savedEntry;
     }
+
 }

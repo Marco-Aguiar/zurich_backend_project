@@ -178,13 +178,24 @@ public class GoogleBooksService {
     private GoogleBookDTO convertToGoogleBookDTO(Volume volume) {
         VolumeInfo info = volume.volumeInfo();
         GoogleBookDTO dto = new GoogleBookDTO();
+
         dto.setId(volume.id());
         dto.setTitle(info.title());
         dto.setAuthors(info.authors() != null ? info.authors() : Collections.emptyList());
         dto.setCategories(info.categories() != null ? info.categories() : Collections.emptyList());
+
         if (info.imageLinks() != null) {
             dto.setThumbnailUrl(info.imageLinks().thumbnail());
         }
+
+        if (info.averageRating() != null) {
+            dto.setAverageRating(info.averageRating());
+        }
+        if (info.ratingsCount() != null) {
+            dto.setRatingsCount(info.ratingsCount());
+        }
+
         return dto;
     }
+
 }

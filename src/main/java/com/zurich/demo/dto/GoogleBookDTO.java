@@ -10,4 +10,6 @@ public class GoogleBookDTO {
     private List<String> authors;
     private String thumbnailUrl;
     private List<String> categories;
+    private Double averageRating;
+    private Integer ratingsCount;
 }

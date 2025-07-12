@@ -7,15 +7,12 @@
     <list default="true" id="4bd92472-9397-4002-b935-e1512148725c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/RestTemplateConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/RestTemplateConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/config/SecurityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/security/SecurityFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/AuthenticationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/BookEntryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/BookEntryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-test.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/GoogleBookDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/GoogleBookDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/SaveBookRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/SaveBookRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/VolumeInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/VolumeInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/BookEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/model/BookEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/BookEntryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/BookEntryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +150,7 @@
       <workItem from="1752109631133" duration="4000" />
       <workItem from="1752109647680" duration="70000" />
       <workItem from="1752109725619" duration="45000" />
-      <workItem from="1752109777344" duration="50570000" />
+      <workItem from="1752109777344" duration="59003000" />
     </task>
     <servers />
   </component>

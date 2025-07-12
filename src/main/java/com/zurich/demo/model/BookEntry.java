@@ -32,6 +32,10 @@ public class BookEntry {
     @Schema(description = "URL to the book's thumbnail image", example = "http://books.google.com/books/content?id=zyTCAlADqUcC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api")
     private String thumbnailUrl;
 
+    @Schema(description = "Average user rating from Google Books API", example = "4.3")
+    @Column(name = "average_rating")
+    private Double averageRating;
+
     @Enumerated(EnumType.STRING)
     @Schema(description = "Current status of the book (e.g., OWNED, WISHLIST, READING)", example = "OWNED")
     private BookStatus status;
