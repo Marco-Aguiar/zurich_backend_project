@@ -38,10 +38,9 @@ public class GoogleBooksController {
     @GetMapping("/search")
     public List<GoogleBookDTO> searchBooks(
             @Parameter(description = "Book title") @RequestParam(required = false) String title,
-            @Parameter(description = "Book author") @RequestParam(required = false) String author,
-            @Parameter(description = "Book subject/genre") @RequestParam(required = false) String subject) {
-        logger.info("External book search initiated with title: '{}', author: '{}', subject: '{}'", title, author, subject);
-        return googleBooksService.searchBooks(title, author, subject);
+            @Parameter(description = "Book author") @RequestParam(required = false) String author) {
+        logger.info("External book search initiated with title: '{}', author: '{}'", title, author);
+        return googleBooksService.searchBooks(title, author);
     }
 
     @Operation(summary = "Get book price by ISBN",
@@ -55,6 +54,8 @@ public class GoogleBooksController {
     public ResponseEntity<SaleInfo> getBookPriceByIsbn(
             @Parameter(description = "The 13-digit ISBN of the book", example = "9788532530837") @RequestParam String isbn,
             @RequestParam(defaultValue = "US") String country) {
+        System.out.println(country);
+        System.out.println(isbn);
         logger.info("Searching for price information for ISBN: {} in country: {}", isbn, country);
         Optional<SaleInfo> saleInfoOpt = googleBooksService.findBookPriceByIsbn(isbn, country);
 
@@ -72,8 +73,9 @@ public class GoogleBooksController {
             description = "Finds book recommendations based on a given book title.")
     @ApiResponse(responseCode = "200", description = "A list of recommended books")
     @GetMapping("/recommendations")
-    public List<GoogleBookDTO> getRecommendations(@Parameter(description = "The title of the book to get recommendations for", example = "The Power of Habit") @RequestParam String title) {
-        logger.info("Fetching recommendations for title: '{}'", title);
-        return googleBooksService.findRecommendationsByTitle(title);
+    public List<GoogleBookDTO> getRecommendations(@Parameter(description = "The title of the book to get recommendations for", example = "The Power of Habit") @RequestParam(required = false) String title,
+                                                  @Parameter(description = "The subject of the book to get recommendations for", example = "Drama") @RequestParam(required = false) String subject) {
+        logger.info("Fetching recommendations for title or subject: '{}' or '{}'", title, subject);
+        return googleBooksService.findRecommendations(title, subject);
     }
 }

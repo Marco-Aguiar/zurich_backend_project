@@ -7,11 +7,13 @@ import com.zurich.demo.dto.GoogleBookDTO;
 import com.zurich.demo.dto.SaleInfo;
 import com.zurich.demo.dto.Volume;
 import com.zurich.demo.dto.VolumeInfo;
+import com.zurich.demo.exception.ExternalApiException;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Collections;
@@ -48,7 +50,7 @@ public class GoogleBooksService {
         logger.info("GOOGLE_BOOKS_API_KEY received by Spring: '{}'", apiKey != null ? apiKey.substring(0, 10) + "..." : "null");
     }
 
-    public List<GoogleBookDTO> searchBooks(String title, String author, String subject) {
+    public List<GoogleBookDTO> searchBooks(String title, String author) {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (title != null && !title.isBlank()) {
@@ -56,9 +58,6 @@ public class GoogleBooksService {
         }
         if (author != null && !author.isBlank()) {
             queryBuilder.append("inauthor:").append(author).append(" ");
-        }
-        if (subject != null && !subject.isBlank()) {
-            queryBuilder.append("subject:").append(subject);
         }
 
         String query = queryBuilder.toString().trim().replace(" ", "+");
@@ -92,34 +91,53 @@ public class GoogleBooksService {
                 .map(Volume::saleInfo);
     }
 
-    public List<GoogleBookDTO> findRecommendationsByTitle(String title) {
-        String query = "intitle:" + title;
-        BookApiResponse initialResponse = executeQuery(query, 1, "US");
+    public List<GoogleBookDTO> findRecommendations(String title, String subject) {
+        if (subject != null && !subject.isBlank()) {
+            String recommendationQuery = "subject:" + subject;
+            BookApiResponse response = executeQuery(recommendationQuery, 10, "US");
 
-        Optional<String> categoryOpt = Optional.ofNullable(initialResponse)
-                .flatMap(res -> Optional.ofNullable(res.items()))
-                .flatMap(items -> items.stream().findFirst())
-                .flatMap(volume -> Optional.ofNullable(volume.volumeInfo().categories()))
-                .flatMap(categories -> categories.stream().findFirst());
+            if (response == null || response.items() == null) {
+                logger.warn("No recommendations found or null response received for subject: '{}'", subject);
+                return Collections.emptyList();
+            }
 
-        if (categoryOpt.isEmpty()) {
-            logger.warn("No category found for title '{}' to base recommendations on.", title);
-            return Collections.emptyList();
+            return response.items().stream()
+                    .map(this::convertToGoogleBookDTO)
+                    .collect(Collectors.toList());
         }
 
-        String recommendationQuery = "subject:" + categoryOpt.get();
-        BookApiResponse recommendationResponse = executeQuery(recommendationQuery, 10, "US");
+        if (title != null && !title.isBlank()) {
+            String query = "intitle:" + title;
+            BookApiResponse initialResponse = executeQuery(query, 1, "US");
 
-        if (recommendationResponse == null || recommendationResponse.items() == null) {
-            logger.warn("No recommendations found or null response received for category: '{}'", categoryOpt.get());
-            return Collections.emptyList();
+            Optional<String> categoryOpt = Optional.ofNullable(initialResponse)
+                    .flatMap(res -> Optional.ofNullable(res.items()))
+                    .flatMap(items -> items.stream().findFirst())
+                    .flatMap(volume -> Optional.ofNullable(volume.volumeInfo().categories()))
+                    .flatMap(categories -> categories.stream().findFirst());
+
+            if (categoryOpt.isEmpty()) {
+                logger.warn("No category found for title '{}' to base recommendations on.", title);
+                return Collections.emptyList();
+            }
+
+            String recommendationQuery = "subject:" + categoryOpt.get();
+            BookApiResponse recommendationResponse = executeQuery(recommendationQuery, 10, "US");
+
+            if (recommendationResponse == null || recommendationResponse.items() == null) {
+                logger.warn("No recommendations found or null response received for category: '{}'", categoryOpt.get());
+                return Collections.emptyList();
+            }
+
+            return recommendationResponse.items().stream()
+                    .filter(volume -> !volume.volumeInfo().title().equalsIgnoreCase(title))
+                    .map(this::convertToGoogleBookDTO)
+                    .collect(Collectors.toList());
         }
 
-        return recommendationResponse.items().stream()
-                .filter(volume -> !volume.volumeInfo().title().equalsIgnoreCase(title))
-                .map(this::convertToGoogleBookDTO)
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
+
 
     private BookApiResponse executeQuery(String query, int maxResults, String country) {
         String uri = UriComponentsBuilder.fromUriString(baseUrl)
@@ -132,24 +150,30 @@ public class GoogleBooksService {
                 .toUriString();
 
         logger.info("Executing Google Books API call. Full URI: '{}'", uri);
-        String rawJsonResponse = null;
 
         try {
-            rawJsonResponse = restTemplate.getForObject(uri, String.class);
-            logger.info("Raw JSON response received for query '{}': {}", query, rawJsonResponse.substring(0, Math.min(rawJsonResponse.length(), 1000)));
+            String rawJsonResponse = restTemplate.getForObject(uri, String.class);
+            logger.info("Raw JSON response received...");
+            return objectMapper.readValue(rawJsonResponse, BookApiResponse.class);
 
-            BookApiResponse response = objectMapper.readValue(rawJsonResponse, BookApiResponse.class);
+        } catch (HttpClientErrorException e) {
+            String responseBody = e.getResponseBodyAsString();
+            logger.error("Google Books API error: {}", responseBody, e);
 
-            logger.info("Google Books API call successful for query: '{}'. Total items reported by API: {}. Items list size: {}",
-                    query, response.totalItems(), (response.items() != null ? response.items().size() : 0));
-            return response;
+            // Detecta se o erro é relacionado à API Key
+            if (responseBody != null && responseBody.contains("API key not valid")) {
+                throw new ExternalApiException("❌ External service error: Your API key is invalid or expired. Please update it and try again.", e);
+            }
+
+            // Mensagem genérica para outros erros HTTP 4xx
+            throw new ExternalApiException("❌ External service error: Failed to retrieve data from Google Books API. Please try again later.", e);
 
         } catch (Exception e) {
-            logger.error("Error calling/deserializing Google Books API for query: '{}'. Raw response (if available): {}. Exception type: {}. Message: {}",
-                    query, (rawJsonResponse != null ? rawJsonResponse.substring(0, Math.min(rawJsonResponse.length(), 500)) : "N/A"), e.getClass().getName(), e.getMessage(), e);
-            return null;
+            logger.error("Unexpected error calling Google Books API", e);
+            throw new ExternalApiException("❌ Unexpected error while calling Google Books API. Please try again later.", e);
         }
     }
+
 
     private GoogleBookDTO convertToGoogleBookDTO(Volume volume) {
         VolumeInfo info = volume.volumeInfo();
