@@ -51,6 +51,33 @@ public class GoogleBooksController {
     }
 
     @Operation(
+            summary = "Get Google Book details by ID",
+            description = "Fetches complete details of a book from Google Books API using its Google Book ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Book details retrieved",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoogleBookDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Book not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content)
+    })
+    @GetMapping("/{googleBookId}")
+    public ResponseEntity<GoogleBookDTO> getBookDetailsById(
+            @Parameter(description = "Google Book ID", example = "OEBaAAAAMAAJ") @PathVariable String googleBookId) {
+
+        logger.info("Fetching Google Book details for ID: {}", googleBookId);
+        Optional<GoogleBookDTO> bookOpt = googleBooksService.getBookDetails(googleBookId);
+
+        return bookOpt
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    logger.warn("No book details found for Google Book ID: {}", googleBookId);
+                    return ResponseEntity.notFound().build();
+                });
+    }
+
+
+    @Operation(
             summary = "Get book price by ISBN",
             description = "Returns sale information for a book using its ISBN-13"
     )

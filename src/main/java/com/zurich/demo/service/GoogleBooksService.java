@@ -76,6 +76,28 @@ public class GoogleBooksService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<GoogleBookDTO> getBookDetails(String googleBookId) {
+        String uri = UriComponentsBuilder.fromUriString(baseUrl + "/" + googleBookId)
+                .queryParam("key", apiKey)
+                .encode()
+                .toUriString();
+
+        logger.info("Fetching book details from Google Books API for ID: {}", googleBookId);
+
+        try {
+            String rawJsonResponse = restTemplate.getForObject(uri, String.class);
+            Volume volume = objectMapper.readValue(rawJsonResponse, Volume.class);
+            return Optional.of(convertToGoogleBookDTO(volume));
+        } catch (HttpClientErrorException e) {
+            logger.error("Failed to fetch book details: {}", e.getResponseBodyAsString(), e);
+            return Optional.empty();
+        } catch (Exception e) {
+            logger.error("Unexpected error fetching book details", e);
+            return Optional.empty();
+        }
+    }
+
+
     public Optional<SaleInfo> findBookPriceByIsbn(String isbn, String country) {
         String query = "isbn:" + isbn;
         BookApiResponse response = executeQuery(query, 1, country);
@@ -183,19 +205,33 @@ public class GoogleBooksService {
         dto.setTitle(info.title());
         dto.setAuthors(info.authors() != null ? info.authors() : Collections.emptyList());
         dto.setCategories(info.categories() != null ? info.categories() : Collections.emptyList());
+        dto.setPublisher(info.publisher());
+        dto.setPublishedDate(info.publishedDate());
+        dto.setDescription(info.description());
+        dto.setPageCount(info.pageCount());
+        dto.setPrintType(info.printType());
+        dto.setAverageRating(info.averageRating());
+        dto.setRatingsCount(info.ratingsCount());
+        dto.setLanguage(info.language());
+        dto.setPreviewLink(info.previewLink());
+        dto.setInfoLink(info.infoLink());
+        dto.setCanonicalVolumeLink(info.canonicalVolumeLink());
 
         if (info.imageLinks() != null) {
             dto.setThumbnailUrl(info.imageLinks().thumbnail());
         }
 
-        if (info.averageRating() != null) {
-            dto.setAverageRating(info.averageRating());
+        if (info.industryIdentifiers() != null) {
+            info.industryIdentifiers().stream()
+                    .filter(id -> "ISBN_13".equals(id.type()))
+                    .findFirst()
+                    .ifPresent(id -> dto.setIsbn13(id.identifier()));
         }
-        if (info.ratingsCount() != null) {
-            dto.setRatingsCount(info.ratingsCount());
-        }
+        System.out.println("aqui está o DTO");
+        System.out.println(dto);
 
         return dto;
     }
+
 
 }
