@@ -72,6 +72,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
+    @ExceptionHandler(DuplicateBookEntryException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateBook(DuplicateBookEntryException ex) {
+        logger.warn("Duplicate book entry attempt: {}", ex.getMessage());
+        Map<String, String> body = new HashMap<>();
+        body.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         logger.warn("Method argument type mismatch for parameter '{}': {}", ex.getName(), ex.getMessage());

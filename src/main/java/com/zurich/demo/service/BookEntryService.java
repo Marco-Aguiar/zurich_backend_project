@@ -1,6 +1,7 @@
 package com.zurich.demo.service;
 
 import com.zurich.demo.dto.SaveBookRequest;
+import com.zurich.demo.exception.DuplicateBookEntryException;
 import com.zurich.demo.model.BookEntry;
 import com.zurich.demo.model.BookStatus;
 import com.zurich.demo.model.User;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookEntryService {
@@ -80,8 +82,12 @@ public class BookEntryService {
 
     public BookEntry saveBookEntryFromSearch(SaveBookRequest request, Long userId) {
         logger.info("Saving book entry from search for user ID: {} with Google Book ID: {}", userId, request.getGoogleBookId());
-        System.out.println(request.getAverageRating());
-        System.out.println("here's the rating");
+
+        Optional<BookEntry> existingEntry = bookEntryRepository.findByUserIdAndGoogleBookId(userId, request.getGoogleBookId());
+        if (existingEntry.isPresent()) {
+            throw new DuplicateBookEntryException("This book has already been saved by the user.");
+        }
+
         BookEntry entry = new BookEntry();
         entry.setGoogleBookId(request.getGoogleBookId());
         entry.setTitle(request.getTitle());
@@ -99,5 +105,6 @@ public class BookEntryService {
         logger.info("Book entry saved successfully with ID: {}", savedEntry.getId());
         return savedEntry;
     }
+
 
 }
