@@ -1,5 +1,6 @@
 package com.zurich.demo.controller;
 
+import com.zurich.demo.dto.UserProfileResponse;
 import com.zurich.demo.dto.UserRegistrationRequest;
 import com.zurich.demo.dto.UserResponseDTO;
 import com.zurich.demo.model.User;
@@ -16,7 +17,9 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +86,16 @@ public class UserController {
                 .map(user -> new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/me")
+    @Operation(summary = "Get current user profile")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<UserProfileResponse> getCurrentUser(@AuthenticationPrincipal User user) {
+        logger.info("Fetching profile for user: {}", user.getUsername());
+        UserProfileResponse profile = new UserProfileResponse(user.getUsername());
+        return ResponseEntity.ok(profile);
+    }
+
 
     @Operation(
             summary = "Get user by ID",

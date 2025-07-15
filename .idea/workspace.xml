@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4bd92472-9397-4002-b935-e1512148725c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/bb7027cf-c5d3-46e1-883c-dfad2d5beaaa/storage_v2/_src_/database/booktracker_db.jhrLuA/schema/public.abK9xQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/GoogleBooksController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/GoogleBookDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/GoogleBookDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/VolumeInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/dto/VolumeInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/service/GoogleBooksService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/zurich/demo/controller/UserController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +149,8 @@
       <workItem from="1752109631133" duration="4000" />
       <workItem from="1752109647680" duration="70000" />
       <workItem from="1752109725619" duration="45000" />
-      <workItem from="1752109777344" duration="67169000" />
+      <workItem from="1752109777344" duration="68014000" />
+      <workItem from="1752459571400" duration="12908000" />
     </task>
     <servers />
   </component>
