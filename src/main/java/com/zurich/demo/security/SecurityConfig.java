@@ -42,18 +42,15 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAuthenticationErrorHandler)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        // Allow public access to authentication and user registration endpoints
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        // Allow public access to all Swagger/OpenAPI documentation paths
                         .requestMatchers(
-                                "/v3/api-docs/**",     // Raw OpenAPI JSON definition
-                                "/swagger-ui.html",    // Default Swagger UI HTML page
-                                "/swagger-ui/**",      // Other Swagger UI static assets (CSS, JS, etc.)
-                                "/documentation/**",   // Your custom Swagger UI path from application.properties
-                                "/webjars/**"          // Common path for static resources used by Swagger UI
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/documentation/**",
+                                "/webjars/**"
                         ).permitAll()
-                        // All other requests require authentication
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -63,8 +60,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // It's generally safer to use specific origins if possible,
-        // but for local development/demonstration, allow patterns might be fine.
         configuration.setAllowedOriginPatterns(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));

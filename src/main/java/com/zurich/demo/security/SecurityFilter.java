@@ -1,7 +1,7 @@
 package com.zurich.demo.security;
 
-import com.zurich.demo.repository.UserRepository;
-import com.zurich.demo.service.TokenService;
+import com.zurich.demo.user.repository.UserRepository;
+import com.zurich.demo.auth.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

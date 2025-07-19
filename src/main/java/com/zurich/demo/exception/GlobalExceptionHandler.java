@@ -60,8 +60,17 @@ public class GlobalExceptionHandler {
         logger.error("External API error: {}", ex.getMessage());
         Map<String, String> body = new HashMap<>();
         body.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(body);  // ou HttpStatus.UNAUTHORIZED se for o caso
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(body);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFound(ResourceNotFoundException ex) {
+        logger.warn("Resource not found: {}", ex.getMessage());
+        Map<String, String> body = new HashMap<>();
+        body.put("error", ex.getMessage() != null ? ex.getMessage() : "Resource not found.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
 
 
     @ExceptionHandler(EntityNotFoundException.class)

@@ -8,7 +8,7 @@
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 ![Lombok](https://img.shields.io/badge/Lombok-333333?style=for-the-badge&logo=lombok&logoColor=white)
 
-BookFlow is a robust Spring Boot RESTful API designed to help users manage their personal book collection. It integrates seamlessly with the Google Books API, allowing users to discover new books, track their reading progress, and maintain a comprehensive personal library.
+BookReader is a robust Spring Boot RESTful API designed to help users manage their personal book collection. It integrates seamlessly with the Google Books API, allowing users to discover new books, track their reading progress, and maintain a comprehensive personal library.
 
 ---
 
@@ -27,6 +27,11 @@ BookFlow is a robust Spring Boot RESTful API designed to help users manage their
 * **Global Error Handling:** Centralized exception handling to provide consistent and informative error responses.
 * **API Documentation:** Comprehensive API documentation generated with Swagger (OpenAPI 3) for easy endpoint exploration and testing.
 * **Structured Logging:** Professional logging with SLF4J and Logback for improved application monitoring and debugging.
+
+### ✨ Coming soon
+* **Tracker book progress:** A dedicated feature to track your reading progress for each book. For example, easily see "Lord of the Rings - 80% read in two weeks.
+* **Co Read:** Connect with friends and share your reading journey! This feature will let you see your friends' book management activities. 
+
 
 ---
 
@@ -48,7 +53,7 @@ BookFlow is a robust Spring Boot RESTful API designed to help users manage their
 
 ### ⚙️ Setup and Run Locally (using Docker Compose)
 
-To get BookFlow up and running on your local machine using Docker Compose, follow these steps:
+To get BookReader up and running on your local machine using Docker Compose, follow these steps:
 
 **Prerequisites:**
 
@@ -58,13 +63,13 @@ To get BookFlow up and running on your local machine using Docker Compose, follo
 1.  **Clone the repository**
 
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/BookFlow.git](https://github.com/YOUR_USERNAME/BookFlow.git) # Replace YOUR_USERNAME
-    cd BookFlow
+    git clone [https://github.com/Marco-Aguiar/zurich_backend_project.git](https://github.com/Marco-Aguiar/zurich_backend_project)
+    cd BookReader
     ```
 
 2.  **Configure Environment Variables**
 
-    Create a file named `.env` in the root of your project (the same directory as `docker-compose.yml`) and add your sensitive environment variables there. This keeps your secrets out of `docker-compose.yml`.
+    The file named `.env` in the root of your project already contains the necessary variables to run the project, unless you donwloaded the project by Github. Fell free to customize them (the same directory as `docker-compose.yml`) and add your sensitive environment variables there. This keeps your secrets out of `docker-compose.yml`.
 
     ```dotenv
     # .env file example
@@ -97,7 +102,7 @@ To get BookFlow up and running on your local machine using Docker Compose, follo
           JWT_SECRET: ${JWT_SECRET} # Read from .env
     ```
 
-    > **Note:** Your `src/main/resources/application.properties` is already configured to read these environment variables, making it flexible for Dockerized and non-Dockerized runs.
+    > **Note:** Your `src/main/resources/application.properties` is already configured to read these environment variables, making it flexible for Dockerized and non-Dockerized runs. You just need to add them as environment variables in your Intellij/Preferred IDE.
 
 3.  **Build and Run the Containers**
 
@@ -158,7 +163,7 @@ Once the application is running, you can interact with the API:
 
 For a comprehensive and interactive exploration of all API endpoints, access the Swagger UI at:
 
-`http://localhost:8080/swagger-ui.html`
+`http://localhost:8080/documentation`
 
 ---
 
