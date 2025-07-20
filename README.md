@@ -181,6 +181,15 @@ To stop and remove containers and delete the persistent database data (for a cle
 docker-compose down -v
 ```
 
+---
+
+###  Full experience Setup
+
+For a full experience, you can download the frontend application that connects with this backend server.
+If you got interested, here's the link:<br>
+[https://github.com/Marco-Aguiar/zurich_frontend_project.git](https://github.com/Marco-Aguiar/zurich_frontend_project)
+
+
 🤝 Contributing
 
 Contributions are welcome! If you have any suggestions, bug reports, or want to contribute to the codebase, please feel free to open an issue or submit a pull request.
