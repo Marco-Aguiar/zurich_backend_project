@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
+
 @Entity
 @Table(name = "book_entries")
 @Data
@@ -26,8 +28,11 @@ public class BookEntry {
     @Schema(description = "Authors of the book, comma-separated", example = "Douglas Adams")
     private String authors;
 
-    @Schema(description = "Subject or genre of the book", example = "Science Fiction")
-    private String subject;
+    @ElementCollection
+    @CollectionTable(name = "book_subjects", joinColumns = @JoinColumn(name = "book_entry_id"))
+    @Column(name = "subject")
+    @Schema(description = "Subjects or genres of the book", example = "[\"Science Fiction\", \"Adventure\"]")
+    private List<String> subject;
 
     @Column(name = "thumbnail_url")
     @Schema(description = "URL to the book's thumbnail image", example = "http://books.google.com/books/content?id=zyTCAlADqUcC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api")

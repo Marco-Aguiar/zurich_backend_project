@@ -70,7 +70,7 @@ public class BookEntryService {
         entry.setGoogleBookId(request.getGoogleBookId());
         entry.setTitle(request.getTitle());
         entry.setAuthors(String.join(", ", request.getAuthors()));
-        entry.setSubject(request.getSubject());
+        entry.setSubject(request.getSubject() != null ? request.getSubject() : List.of()); // CORREÇÃO AQUI
         entry.setThumbnailUrl(request.getThumbnailUrl());
         entry.setStatus(request.getStatus());
         entry.setAverageRating(request.getAverageRating());
@@ -83,6 +83,4 @@ public class BookEntryService {
         logger.info("Book entry saved successfully with ID: {}", savedEntry.getId());
         return savedEntry;
     }
-
-
 }

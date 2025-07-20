@@ -18,7 +18,7 @@ public class SaveBookRequest {
     private String title;
 
     private List<String> authors;
-    private String subject;
+    private List<String> subject;
     private String thumbnailUrl;
     private Double averageRating;
 
