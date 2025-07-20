@@ -63,7 +63,7 @@ To get BookReader up and running on your local machine using Docker Compose, fol
 1.  **Clone the repository**
 
     ```bash
-    git clone [https://github.com/Marco-Aguiar/zurich_backend_project.git](https://github.com/Marco-Aguiar/zurich_backend_project)
+    git clone https://github.com/Marco-Aguiar/zurich_backend_project.git
     cd BookReader
     ```
 
